@@ -21,7 +21,7 @@ export async function GET(req: Request) {
     const user = await UserModal.aggregate([
       { $match: { id: userId } },
       { $unwind: "$messages" },
-      { $sort: { "messages.createdAt": -1 } },
+      { $sort: { "messages.createdAt": -1 } }, // -1 means sort in ascending
       { $group: { _id: "$_id", messages: { $push: "$messages" } } },
     ]);
 
@@ -36,5 +36,7 @@ export async function GET(req: Request) {
       },
       { status: 200 }
     );
-  } catch (error) {}
+  } catch (error) {
+    handleResponse(false, "An Unexpected error occured!", 500);
+  }
 }
